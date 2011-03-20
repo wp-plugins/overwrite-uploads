@@ -69,3 +69,9 @@ If you're seeing any errors after modifying *wp-admin/includes/file.php*, just r
 
 = 1.0 =
 * Initial release
+
+
+== Upgrade Notice ==
+
+= 1.0 =
+Initial release
