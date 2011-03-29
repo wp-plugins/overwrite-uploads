@@ -47,7 +47,7 @@ if( !class_exists('overwriteUploads') )
 	class overwriteUploads
 	{
 		// Declare variables and constants
-		protected $settings, $options, $updatedOptions, $environmentOK, $userUpdateCount, $userMessageCount;
+		protected $settings, $options, $updatedOptions, $environmentOK, $userMessageCount;
 		const REQUIRED_WP_VERSION	= '3.1';
 		const PREFIX				= 'ovup_';
 		const DEBUG_MODE			= false;
