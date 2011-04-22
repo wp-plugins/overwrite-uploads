@@ -40,10 +40,11 @@ The second line adds the new hook itself.
 = How do I add the new hook? =
 See the installation instructions for full details. It's a fairly easy change to make, but you need to be careful that you follow the directions closely. If you put things in the wrong place then you might cause an error which would make Wordpress stop working. If you're not comfortable with making basic PHP tweaks then you might want to ask someone for help.
 
-
 = I tried to and the new hook, but something went wrong and now Wordpress is broken = 
 If you're seeing any errors after modifying *wp-admin/includes/file.php*, just re-upload your backup copy of it and that will fix the errors. If you didn't make a backup copy before making the changes, you can re-download Wordpress and upload the files.
 
+= How can I contact you? =
+You can use the [contact form](http://iandunn.name/contact) on my website.
 
 == Screenshots ==
 1. The new setting on the Media Settings page.

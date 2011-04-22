@@ -25,7 +25,7 @@ License: GPL2
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-if(basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__))
+if( basename($_SERVER['SCRIPT_FILENAME']) == basename(__FILE__) )
 	die("Access denied.");
 
 define('OVUP_NAME', 'Overwrite Uploads');
@@ -61,10 +61,10 @@ if( !class_exists('overwriteUploads') )
 		{
 			// Initialize variables
 			$defaultOptions						= array( 'updates' => array(), 'errors' => array() );
-			$this->options						= array_merge( get_option( self::PREFIX . 'options', array() ), $defaultOptions );
+			$this->options						= array_merge( get_option( self::PREFIX . 'options', array() ), $defaultOptions );			//  need to sanitize
 			$this->updatedOptions				= false;
 			$this->userMessageCount				= array( 'updates' => 0, 'errors' => 0 );
-			$this->settings['overwriteUploads']	= get_option( self::PREFIX . 'overwrite-uploads' );
+			$this->settings['overwriteUploads']	= get_option( self::PREFIX . 'overwrite-uploads' );			// need to sanitize
 			$this->environmentOK				= $this->checkEnvironment();
 			
 			// Register action for error messages and updates
