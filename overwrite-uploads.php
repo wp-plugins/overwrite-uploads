@@ -42,7 +42,7 @@ if( !class_exists('overwriteUploads') )
 	 * @author Ian Dunn <ian@iandunn.name>
 	 * @todo
 	 *		Once the necessary filter is added to core (http://core.trac.wordpress.org/ticket/16849): Remove custom filter, refactor environment check, and update required version
-	 *		Look into using http://codex.wordpress.org/Function_Reference/WP_Error instead of your custom one
+	 *		Look into using http://codex.wordpress.org/Function_Reference/WP_Error instead of your custom one. If that's not appropriate, then maybe write a quick blog post on the method you're using now.
 	 *		Add internationalization support
 	 */
 	class overwriteUploads
