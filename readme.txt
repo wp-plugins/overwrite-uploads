@@ -14,8 +14,6 @@ By default Wordpress doesn't overwrite existing files. Instead, it appends a num
 
 **NOTE**: You have to make a small change to one of Wordpress' core files for this to work. See the FAQ for details.
 
-**NOTE**: This plugin requires PHP5 and Wordpress 3.1.
-
 
 == Installation ==
 1. Upload the *overwrite-uploads* directory to your *wp-content/plugins/* directory.
