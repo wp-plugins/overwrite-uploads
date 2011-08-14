@@ -3,8 +3,8 @@ Contributors: iandunn
 Donate link: http://kiva.org
 Tags: overwrite, uploads, files, media library
 Requires at least: 3.1
-Tested up to: 3.1
-Stable tag: 1.0
+Tested up to: 3.2.1
+Stable tag: 1.0.1
 
 Lets you choose whether or not Wordpress should overwrite files uploaded to the Media Library
 
@@ -18,7 +18,7 @@ By default Wordpress doesn't overwrite existing files. Instead, it appends a num
 == Installation ==
 1. Upload the *overwrite-uploads* directory to your *wp-content/plugins/* directory.
 2. Backup a copy of *wp-admin/includes/file.php* in case you make a mistake installing the new hook.
-3. Edit *wp-admin/includes/file.php* and scroll down to the line that says, `function wp_handle_upload( &$file, $overrides = false, $time = null ) {` *(line 268 in Wordpress 3.1)*
+3. Edit *wp-admin/includes/file.php* and scroll down to the line that says, `function wp_handle_upload( &$file, $overrides = false, $time = null ) {` *(line 230 in Wordpress 3.2.1)*
 4. Right above it, add this new line: `define('OVUP_FILTER_ADDED', true); // custom modification for Overwrite Uploads plugin`
 5. Scroll down a few more lines until you see, `$file = apply_filters( 'wp_handle_upload_prefilter', $file );`
 6. Right above it, add this new line: `$overrides = apply_filters( 'wp_handle_upload_overrides', $overrides ); // custom modification for Overwrite Uploads plugin`

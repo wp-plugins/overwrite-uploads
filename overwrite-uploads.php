@@ -2,7 +2,7 @@
 /*
 Plugin Name: Overwrite Uploads
 Description: Lets you choose whether or not Wordpress should overwrite files uploaded to the Media Library
-Version: 1.0
+Version: 1.0.1
 Author: Ian Dunn
 Author URI: http://iandunn.name
 License: GPL2
@@ -40,10 +40,7 @@ if( !class_exists('overwriteUploads') )
 	 *
 	 * @package OverwriteUploads
 	 * @author Ian Dunn <ian@iandunn.name>
-	 * @todo
-	 *		Once the necessary filter is added to core (http://core.trac.wordpress.org/ticket/16849): Remove custom filter, refactor environment check, and update required version
-	 *		Look into using http://codex.wordpress.org/Function_Reference/WP_Error instead of your custom one. If that's not appropriate, then maybe write a quick blog post on the method you're using now.
-	 *		Add internationalization support
+
 	 */
 	class overwriteUploads
 	{
@@ -73,10 +70,15 @@ if( !class_exists('overwriteUploads') )
 			// Register remaining actions and filters
 			if($this->environmentOK)
 			{
-				add_action( 'admin_init', array($this, 'addSettings') );
+				add_action( 'admin_init',		array($this, 'addSettings') );
+				add_action( 'wpmu_new_blog', 	array( $this, 'activateNewSite' ) );
+				
 				add_filter( 'plugin_action_links_'. plugin_basename(__FILE__), array($this, 'addSettingsLink') );
+				
 				if($this->settings['overwriteUploads'])
 					add_filter( 'wp_handle_upload_overrides', array($this, 'addUniqueFilenameCallback') );
+					
+				register_activation_hook( dirname(__FILE__) . '/overwrite-uploads.php', array( $this, 'networkActivate') );
 			}
 		}
 		
@@ -105,6 +107,59 @@ if( !class_exists('overwriteUploads') )
 			}
 		
 			return $environmentOK;
+		}
+		
+		/**
+		 * Handles extra activation tasks for MultiSite installations
+		 * @author Ian Dunn <ian@iandunn.name>
+		 */
+		public function networkActivate()
+		{
+			global $wpdb;
+			
+			if( function_exists('is_multisite') && is_multisite() )
+			{
+				// Activate the plugin across the network if requested
+				if( array_key_exists( 'networkwide', $_GET ) && ( $_GET['networkwide'] == 1) )
+				{
+					$blogs = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
+					
+					foreach( $blogs as $b ) 
+					{
+						switch_to_blog( $b );
+						$this->singleActivate();
+					}
+					
+					restore_current_blog();
+				}
+				else
+					$this->singleActivate();
+			}
+			else
+				$this->singleActivate();
+		}
+		
+		/**
+		 * Prepares a single blog to use the plugin
+		 * @author Ian Dunn <ian@iandunn.name>
+		 */
+		protected function singleActivate()
+		{
+			// Save default settings
+			if( !get_option( self::PREFIX . 'overwrite-uploads' ) )
+				add_option( self::PREFIX . 'overwrite-uploads', false );
+		}
+		
+		/**
+		 * Runs activation code on a new WPMS site when it's created
+		 * @author Ian Dunn <ian@iandunn.name>
+		 * @param int $blogID
+		 */
+		public function activateNewSite( $blogID )
+		{
+			switch_to_blog( $blogID );
+			$this->singleActivate();
+			restore_current_blog();
 		}
 
 		/**
