@@ -6,7 +6,7 @@ Requires at least: 3.1
 Tested up to: 3.3.1
 Stable tag: 1.0.2
 
-Allows you to overwrite uploaded files instead of storing multiple copies.
+Overwrites uploaded files that already exist, instead of storing multiple copies.
 
 
 == Description ==
@@ -64,7 +64,7 @@ You can send me feedback/comments/suggestions using the [contact form](http://ia
 
 = x (2013-12-14) =
 * [UPDATE] General code cleanup and modernization
-* [UPDATE] Removed unnecessary debugging method and activation logic
+* [UPDATE] Removed unnecessary debugging method, activation logic and admin notices support
 
 = 1.0.2 = 
 * Fixed bug where old Media Library entries weren't removed if the 'Organize my uploads into year and month folders' setting was enabled.

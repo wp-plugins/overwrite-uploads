@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Overwrite Uploads
-Description: Lets you choose whether or not Wordpress should overwrite files uploaded to the Media Library
+Description: Overwrites uploaded files that already exist, instead of storing multiple copies.
 Version:     1.0.2
 Author:      Ian Dunn
 Author URI:  http://iandunn.name
