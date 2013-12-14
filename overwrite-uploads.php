@@ -1,12 +1,4 @@
 <?php
-/*
-Plugin Name: Overwrite Uploads
-Description: Overwrites uploaded files that already exist, instead of storing multiple copies.
-Version:     1.0.2
-Author:      Ian Dunn
-Author URI:  http://iandunn.name
-License:     GPL2
-*/
 
 /*  
  * Copyright 2011 Ian Dunn (email : ian@iandunn.name)
@@ -28,63 +20,24 @@ License:     GPL2
 if ( basename( $_SERVER['SCRIPT_FILENAME'] ) == basename( __FILE__ ) )
 	die( "Access denied." );
 
-define( 'OVUP_NAME',                'Overwrite Uploads' );
-define( 'OVUP_REQUIRED_PHP_VERSION', '5' );
-
 if ( ! class_exists( 'overwriteUploads' ) ) {
 	/**
 	 * A Wordpress plugin that allows the user to override files uploaded to the Media Library
-	 * Requires PHP5+ because of various OOP features, pass by reference, etc
-	 * Requires Wordpress 3.1+ because the issue in the link referenced in nonUniqueFilename(), WP_Query() meta_query
 	 *
 	 * @package overwriteUploads
 	 * @author  Ian Dunn <ian@iandunn.name>
 	 */
 	class overwriteUploads {
 		// Declare variables and constants
-		protected $environmentOK;
-		const REQUIRED_WP_VERSION = '3.1';
-		const PREFIX              = 'ovup_';
-		const DEBUG_MODE          = false;
-
+		const PREFIX = 'ovup_';
+		
 		/**
 		 * Constructor
 		 *
 		 * @author Ian Dunn <ian@iandunn.name>
 		 */
 		public function __construct() {
-			// Initialize variables
-			$this->environmentOK    = $this->checkEnvironment();
-
-			// Register remaining actions and filters
-			if ( $this->environmentOK ) {
-				add_filter( 'wp_handle_upload_overrides', array( $this, 'addUniqueFilenameCallback' ) );
-			}
-		}
-
-		/**
-		 * Checks whether the system requirements are met
-		 * file.php is only loaded by WP when necessary, so we include it to make sure we can always check the flag inside it
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 * @return bool True if system requirements are met, false if not
-		 */
-		protected function checkEnvironment() {
-			require_once( ABSPATH . '/wp-admin/includes/file.php' );
-			global $wp_version;
-			$environmentOK = true;
-
-			if ( version_compare( $wp_version, self::REQUIRED_WP_VERSION, "<" ) ) {
-				wp_die( OVUP_NAME . ' requires <strong>Wordpress ' . self::REQUIRED_WP_VERSION . '</strong> or newer in order to work. Please upgrade if you would like to use this plugin.' );
-				$environmentOK = false;
-			}
-
-			if ( ! defined( 'OVUP_FILTER_ADDED' ) || OVUP_FILTER_ADDED !== true ) {
-				wp_die( OVUP_NAME . ' requires a new filter to be added to Wordpress. If this is a new installation or you recently upgraded Wordpress, please see the installation instructions on <a href="http://wordpress.org/extend/plugins/overwrite-uploads/installation/">the Installation page</a> for information on adding it.' );
-				$environmentOK = false;
-			}
-
-			return $environmentOK;
+			add_filter( 'wp_handle_upload_overrides', array( $this, 'addUniqueFilenameCallback' ) );
 		}
 
 		/**
