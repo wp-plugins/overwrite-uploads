@@ -42,7 +42,7 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 	 */
 	class overwriteUploads {
 		// Declare variables and constants
-		protected $settings, $options, $updatedOptions, $environmentOK, $userMessageCount;
+		protected $environmentOK;
 		const REQUIRED_WP_VERSION = '3.1';
 		const PREFIX              = 'ovup_';
 		const DEBUG_MODE          = false;
@@ -54,21 +54,11 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 		 */
 		public function __construct() {
 			// Initialize variables
-			$defaultOptions         = array( 'updates' => array(), 'errors' => array() );
-			$this->options          = array_merge( get_option( self::PREFIX . 'options', array() ), $defaultOptions ); //  need to sanitize
-			$this->updatedOptions   = false;
-			$this->userMessageCount = array( 'updates' => 0, 'errors' => 0 );
 			$this->environmentOK    = $this->checkEnvironment();
-
-			// Register action for error messages and updates
-			add_action( 'admin_notices', array( $this, 'printMessages' ) );
 
 			// Register remaining actions and filters
 			if ( $this->environmentOK ) {
-				add_action( 'wpmu_new_blog',              array( $this, 'activateNewSite' ) );
 				add_filter( 'wp_handle_upload_overrides', array( $this, 'addUniqueFilenameCallback' ) );
-
-				register_activation_hook( dirname( __FILE__ ) . '/overwrite-uploads.php', array( $this, 'networkActivate' ) );
 			}
 		}
 
@@ -85,12 +75,12 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 			$environmentOK = true;
 
 			if ( version_compare( $wp_version, self::REQUIRED_WP_VERSION, "<" ) ) {
-				$this->enqueueMessage( OVUP_NAME . ' requires <strong>Wordpress ' . self::REQUIRED_WP_VERSION . '</strong> or newer in order to work. Please upgrade if you would like to use this plugin.', 'error' );
+				wp_die( OVUP_NAME . ' requires <strong>Wordpress ' . self::REQUIRED_WP_VERSION . '</strong> or newer in order to work. Please upgrade if you would like to use this plugin.' );
 				$environmentOK = false;
 			}
 
 			if ( ! defined( 'OVUP_FILTER_ADDED' ) || OVUP_FILTER_ADDED !== true ) {
-				$this->enqueueMessage( OVUP_NAME . ' requires a new filter to be added to Wordpress. If this is a new installation or you recently upgraded Wordpress, please see the installation instructions on <a href="http://wordpress.org/extend/plugins/overwrite-uploads/installation/">the Installation page</a> for information on adding it.', 'error' );
+				wp_die( OVUP_NAME . ' requires a new filter to be added to Wordpress. If this is a new installation or you recently upgraded Wordpress, please see the installation instructions on <a href="http://wordpress.org/extend/plugins/overwrite-uploads/installation/">the Installation page</a> for information on adding it.' );
 				$environmentOK = false;
 			}
 
@@ -158,64 +148,9 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 				$oaFilename = get_post_meta( $post->ID, '_wp_attached_file', true );
 
 				if ( basename( $oaFilename ) == $filename )
-					if ( ! wp_delete_attachment( $post->ID, true ) )
-						$this->enqueueMessage( OVUP_NAME . ': Old attachment <strong>#' . $post->ID . '</strong> deletion failed.', 'error' );
+					wp_delete_attachment( $post->ID, true );
 			}
 			wp_reset_postdata();
-		}
-
-		/**
-		 * Displays updates and errors
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 */
-		public function printMessages() {
-			foreach ( array( 'updates', 'errors' ) as $type ) {
-				if ( $this->options[$type] && ( self::DEBUG_MODE || $this->userMessageCount[$type] ) ) {
-					echo '<div id="message" class="' . ( $type == 'updates' ? 'updated' : 'error' ) . '">';
-					foreach ( $this->options[$type] as $message ) {
-						if ( $message['mode'] == 'user' || self::DEBUG_MODE )
-							echo '<p>' . $message['message'] . '</p>';
-					}
-					echo '</div>';
-
-					$this->options[$type]          = array();
-					$this->updatedOptions          = true;
-					$this->userMessageCount[$type] = 0;
-				}
-			}
-		}
-
-		/**
-		 * Queues up a message to be displayed to the user
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 * @param string $message The text to show the user
-		 * @param string $type    'update' for a success or notification message, or 'error' for an error message
-		 * @param string $mode    'user' if it's intended for the user, or 'debug' if it's intended for the developer
-		 */
-		protected function enqueueMessage( $message, $type = 'update', $mode = 'user' ) {
-			array_push( $this->options[$type . 's'], array(
-				'message' => $message,
-				'type'    => $type,
-				'mode'    => $mode
-			) );
-
-			if ( $mode == 'user' )
-				$this->userMessageCount[$type . 's'] ++;
-
-			$this->updatedOptions = true;
-		}
-
-		/**
-		 * Destructor
-		 * Writes options to the database
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 */
-		public function __destruct() {
-			if ( $this->updatedOptions )
-				update_option( self::PREFIX . 'options', $this->options );
 		}
 	} // end overwriteUploads
 }
