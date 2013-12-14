@@ -107,26 +107,3 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 		}
 	} // end overwriteUploads
 }
-
-/**
- * Prints an error that the required PHP version wasn't met.
- * This has to be defined outside the class because the class can't be called if the required PHP version isn't installed.
- * Writes options to the database
- *
- * @author Ian Dunn <ian@iandunn.name>
- */
-function ovup_phpOld() {
-	echo '<div id="message" class="error"><p>' . OVUP_NAME . ' requires <strong>PHP ' . OVUP_REQUIRED_PHP_VERSION . '</strong> in order to work. Please ask your web host about upgrading.</p></div>';
-}
-
-// Create an instance
-if ( is_admin() ) {
-	if ( version_compare( PHP_VERSION, OVUP_REQUIRED_PHP_VERSION, '>=' ) ) {
-		if ( class_exists( "overwriteUploads" ) )
-			$ovup = new overwriteUploads();
-	}
-	else
-		add_action( 'admin_notices', 'ovup_phpOld' );
-}
-
-?>
