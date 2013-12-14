@@ -33,6 +33,10 @@ function ovup_requirements_met() {
 		return false;
 	}
 
+	if ( class_exists( 'OverwriteUploads' ) ) {
+		return true;
+	}
+
 	return true;
 }
 
@@ -52,7 +56,8 @@ function ovup_requirements_error() {
 if ( ovup_requirements_met() ) {
 	require_once( dirname( __FILE__ ) . '/classes/overwrite-uploads.php' );
 	
-	$GLOBALS['ovup'] = new overwriteUploads();
+	$GLOBALS['ovup'] = new OverwriteUploads();
+		
 } else {
 	add_action( 'admin_notices', 'ovup_requirements_error' );
 }

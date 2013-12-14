@@ -66,6 +66,8 @@ You can send me feedback/comments/suggestions using the [contact form](http://ia
 * [UPDATE] General code cleanup and modernization
 * [UPDATE] Removed unnecessary debugging method, activation logic and admin notices support
 * [UPDATE] Moved requirements check into bootstrap script
+* [UPDATE] Moved overwrite-uploads.php into classes directory
+* [UPDATE] Fixed improperly capitalized overwriteUploads class name
 
 = 1.0.2 = 
 * Fixed bug where old Media Library entries weren't removed if the 'Organize my uploads into year and month folders' setting was enabled.
