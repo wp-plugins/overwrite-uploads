@@ -19,7 +19,7 @@ By default Wordpress doesn't overwrite existing files. Instead, it appends a num
 1. Upload the *overwrite-uploads* directory to your *wp-content/plugins/* directory.
 2. Backup a copy of *wp-admin/includes/file.php* in case you make a mistake installing the new hook.
 3. Edit *wp-admin/includes/file.php* and scroll down to the line that says, `function wp_handle_upload( &$file, $overrides = false, $time = null ) {` *(line 230 in WordPress 3.3.1)*
-4. Right above it, add this new line: `define('OVUP_FILTER_ADDED', true); // custom modification for Overwrite Uploads plugin`
+4. Right above it, add this new line: `define( 'OVUP_FILTER_ADDED', true ); // custom modification for Overwrite Uploads plugin`
 5. Scroll down a few more lines until you see, `$file = apply_filters( 'wp_handle_upload_prefilter', $file );` *(line 238 in WordPress 3.3.1)*
 6. Right above it, add this new line: `$overrides = apply_filters( 'wp_handle_upload_overrides', $overrides ); // custom modification for Overwrite Uploads plugin`
 7. Activate the plugin through the 'Plugins' menu in WordPress

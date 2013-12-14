@@ -5,6 +5,7 @@ Before each release
 
 1.0.3
 	copy best practices from BGMP
+	add useful readme stuff from BGMP, especially about support
 
 1.1
 	Once the necessary filter is added to core (http://core.trac.wordpress.org/ticket/16849): Remove custom filter, refactor environment check, and update required version
@@ -13,3 +14,6 @@ future
 	Look into using http://codex.wordpress.org/Function_Reference/WP_Error instead of your custom one. If that's not appropriate, then maybe write a quick blog post on the method you're using now.
 	Add internationalization support
 	
+requests
+	checkbox on media upload to let user choose if they want to override this specific file
+		http://wordpress.org/support/topic/error-on-uploads?replies=1#post-4110279
