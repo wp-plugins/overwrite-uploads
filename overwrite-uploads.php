@@ -29,7 +29,7 @@ if ( basename( $_SERVER['SCRIPT_FILENAME'] ) == basename( __FILE__ ) )
 	die( "Access denied." );
 
 define( 'OVUP_NAME',                'Overwrite Uploads' );
-define( 'OVUP_REQUIRED_PHP_VERSON', '5' );
+define( 'OVUP_REQUIRED_PHP_VERSION', '5' );
 
 if ( ! class_exists( 'overwriteUploads' ) ) {
 	/**
@@ -228,12 +228,12 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
  * @author Ian Dunn <ian@iandunn.name>
  */
 function ovup_phpOld() {
-	echo '<div id="message" class="error"><p>' . OVUP_NAME . ' requires <strong>PHP ' . OVUP_REQUIRED_PHP_VERSON . '</strong> in order to work. Please ask your web host about upgrading.</p></div>';
+	echo '<div id="message" class="error"><p>' . OVUP_NAME . ' requires <strong>PHP ' . OVUP_REQUIRED_PHP_VERSION . '</strong> in order to work. Please ask your web host about upgrading.</p></div>';
 }
 
 // Create an instance
 if ( is_admin() ) {
-	if ( version_compare( PHP_VERSION, OVUP_REQUIRED_PHP_VERSON, '>=' ) ) {
+	if ( version_compare( PHP_VERSION, OVUP_REQUIRED_PHP_VERSION, '>=' ) ) {
 		if ( class_exists( "overwriteUploads" ) )
 			$ovup = new overwriteUploads();
 	}
