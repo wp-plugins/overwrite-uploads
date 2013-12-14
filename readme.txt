@@ -62,6 +62,10 @@ You can send me feedback/comments/suggestions using the [contact form](http://ia
 
 == Changelog ==
 
+= x (2013-12-14) =
+* [UPDATE] General code cleanup and modernization
+* [UPDATE] Removed unnecessary debugging method and activation logic
+
 = 1.0.2 = 
 * Fixed bug where old Media Library entries weren't removed if the 'Organize my uploads into year and month folders' setting was enabled.
 * Setting removed because it's unnecessary. Plugin will overwrite uploads if activated, and won't if it isn't.
@@ -74,6 +78,8 @@ You can send me feedback/comments/suggestions using the [contact form](http://ia
 
 
 == Upgrade Notice ==
+
+= x =
 
 = 1.0.2 = 
 Overwrite Uploads 1.0.2 fixes a bug where old Media Library entries weren't deleted.

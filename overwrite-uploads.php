@@ -98,56 +98,6 @@ if ( ! class_exists( 'overwriteUploads' ) ) {
 		}
 
 		/**
-		 * Handles extra activation tasks for MultiSite installations
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 */
-		public function networkActivate() {
-			global $wpdb;
-
-			if ( function_exists( 'is_multisite' ) && is_multisite() ) {
-				// Activate the plugin across the network if requested
-				if ( array_key_exists( 'networkwide', $_GET ) && ( $_GET['networkwide'] == 1 ) ) {
-					$blogs = $wpdb->get_col( "SELECT blog_id FROM $wpdb->blogs" );
-
-					foreach ( $blogs as $b ) {
-						switch_to_blog( $b );
-						$this->singleActivate();
-					}
-
-					restore_current_blog();
-				}
-				else
-					$this->singleActivate();
-			}
-			else
-				$this->singleActivate();
-		}
-
-		/**
-		 * Prepares a single blog to use the plugin
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 */
-		protected function singleActivate() {
-			// Save default settings
-			if ( ! get_option( self::PREFIX . 'overwrite-uploads' ) )
-				add_option( self::PREFIX . 'overwrite-uploads', false );
-		}
-
-		/**
-		 * Runs activation code on a new WPMS site when it's created
-		 *
-		 * @author Ian Dunn <ian@iandunn.name>
-		 * @param int $blogID
-		 */
-		public function activateNewSite( $blogID ) {
-			switch_to_blog( $blogID );
-			$this->singleActivate();
-			restore_current_blog();
-		}
-
-		/**
 		 * Adds the callback necessary to avoid creating unique filenames
 		 *
 		 * @author Ian Dunn <ian@iandunn.name>
