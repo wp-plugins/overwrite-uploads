@@ -50,7 +50,7 @@ function ovup_requirements_error() {
  * The main program needs to be in a separate file that only gets loaded if the plugin requirements are met. Otherwise older PHP installations could crash when trying to parse it.
  */
 if ( ovup_requirements_met() ) {
-	require_once( dirname( __FILE__ ) . '/overwrite-uploads.php' );
+	require_once( dirname( __FILE__ ) . '/classes/overwrite-uploads.php' );
 	
 	$GLOBALS['ovup'] = new overwriteUploads();
 } else {
