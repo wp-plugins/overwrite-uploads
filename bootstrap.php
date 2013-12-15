@@ -2,10 +2,10 @@
 /*
 Plugin Name: Overwrite Uploads
 Description: Overwrites uploaded files that already exist, instead of storing multiple copies.
-Version:     1.0.2
+Version:     1.1
 Author:      Ian Dunn
 Author URI:  http://iandunn.name
-License:     GPL2
+License:     GPLv2
 */
 
 if ( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )

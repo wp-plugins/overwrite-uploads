@@ -4,7 +4,7 @@ Donate link: http://kiva.org
 Tags: overwrite, uploads, files, media library, unique, filename
 Requires at least: 2.9
 Tested up to: 3.8
-Stable tag: 1.0.2
+Stable tag: 1.1
 License: GPLv2
 
 Overwrites files that already exist when uploading, instead of storing multiple copies with unique filenames.
