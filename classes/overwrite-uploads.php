@@ -22,83 +22,44 @@ if ( basename( $_SERVER['SCRIPT_FILENAME'] ) == basename( __FILE__ ) )
 
 /**
  * Overwrites uploaded files that already exist, instead of storing multiple copies.
- *
- * @author  Ian Dunn <ian@iandunn.name>
  */
 class OverwriteUploads {
 	
 	/**
 	 * Constructor
-	 *
-	 * @author Ian Dunn <ian@iandunn.name>
 	 */
 	public function __construct() {
-		add_filter( 'wp_handle_upload_overrides', array( $this, 'addUniqueFilenameCallback' ) );
+		add_filter( 'wp_handle_upload_prefilter', array( $this, 'remove_existing_attachment' ) );    // Not really the appropriate hook, but there isn't an action that fits
 	}
 
 	/**
-	 * Adds the callback necessary to avoid creating unique filenames
-	 *
-	 * @author Ian Dunn <ian@iandunn.name>
-	 * @param mixed $overrides The $overrides passed to wp_handle_upload. Either an array or boolean false if nothing was passed.
-	 * @return array
+	 * Remove a existing attachment when uploading a new one with the same name in the same folder
+	 * 
+	 * @param array $file
+	 * @return array The unmodified file
 	 */
-	public function addUniqueFilenameCallback( $overrides ) {
-		$overrides['test_form']                = false;
-		$overrides['unique_filename_callback'] = array( $this, 'nonUniqueFilename' );
+	public function remove_existing_attachment( $file ) {
+		$uploads_dir = wp_upload_dir();
+		
+		if ( file_exists( $uploads_dir['path'] . DIRECTORY_SEPARATOR . $file['name'] ) ) {
+			$params = array(
+				'numberposts'   => 1,
+				'post_type'     => 'attachment',
+				'meta_query'    => array(
+					array(
+						'key'   => '_wp_attached_file',
+						'value' => trim( $uploads_dir['subdir'] . DIRECTORY_SEPARATOR . $file['name'], DIRECTORY_SEPARATOR )
+					)
+				)
+			);
 
-		return $overrides;
-	}
-
-	/**
-	 * Returns the filename to be assigned by wp_handle_upload()
-	 * This does the same thing that the comparable section of wp_unique_filename() does, except it doesn't postfix a number if the file already exists, which allows files to be overwritten.
-	 * Requires WP 3.1 (see link below)
-	 *
-	 * @author Ian Dunn <ian@iandunn.name>
-	 * @link   http://core.trac.wordpress.org/ticket/14627 Before WP 3.1 there was a bug where $extension didn't get passed in
-	 * @param string $directory The directory the file will be stored in
-	 * @param string $name      The name of the file (after being sanitized, etc)
-	 * @param string $extension The file extension
-	 * @return string The filename (without any postfixed numbers)
-	 */
-	public function nonUniqueFilename( $directory, $name, $extension ) {
-		$filename = $name . strtolower( $extension );
-		$this->removeOldAttachments( $filename );
-
-		return $filename;
-	}
-
-	/**
-	 * Removes the old attachment post and metadata so that there won't be multiple entries in the Media Library
-	 *
-	 * @author Ian Dunn <ian@iandunn.name>
-	 * @param string $filename
-	 */
-	function removeOldAttachments( $filename ) {
-		$metaQueryParams = array(
-			array(
-				'key'     => '_wp_attached_file',
-				'value'   => $filename,
-				'compare' => 'LIKE'
-			)
-		);
-
-		$params = array(
-			'numberposts' => - 1,
-			'meta_query'  => $metaQueryParams,
-			'post_type'   => 'attachment'
-		);
-
-		$oldAttachments = get_posts( $params );
-
-		foreach ( $oldAttachments as $post ) {
-			setup_postdata( $post ); // @todo - get_the_ID() isn't working
-			$oaFilename = get_post_meta( $post->ID, '_wp_attached_file', true );
-
-			if ( basename( $oaFilename ) == $filename )
-				wp_delete_attachment( $post->ID, true );
+			$existing_file = get_posts( $params );
+			
+			if ( isset( $existing_file[0]->ID ) ) {
+				wp_delete_attachment( $existing_file[0]->ID, true );
+			}
 		}
-		wp_reset_postdata();
+		
+		return $file;
 	}
 } // end OverwriteUploads

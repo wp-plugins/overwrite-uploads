@@ -12,7 +12,7 @@ if ( $_SERVER['SCRIPT_FILENAME'] == __FILE__ )
 	die( 'Access denied.' );
 
 define( 'OVUP_REQUIRED_PHP_VERSION', '5.2.4' );    // Because of WP minimum requirements
-define( 'OVUP_REQUIRED_WP_VERSION',  '3.1' );      // Because of #14627-core
+define( 'OVUP_REQUIRED_WP_VERSION',  '2.9' );      // Because of wp_handle_upload_prefilter
 
 /**
  * Checks if the system requirements are met
@@ -29,12 +29,8 @@ function ovup_requirements_met() {
 		return false;
 	}
 
-	if ( ! defined( 'OVUP_FILTER_ADDED' ) || OVUP_FILTER_ADDED !== true ) {
-		return false;
-	}
-
 	if ( class_exists( 'OverwriteUploads' ) ) {
-		return true;
+		return false;
 	}
 
 	return true;
