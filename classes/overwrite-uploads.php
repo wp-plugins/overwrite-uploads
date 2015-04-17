@@ -36,6 +36,7 @@ class OverwriteUploads {
 	 * Remove a existing attachment when uploading a new one with the same name in the same folder
 	 * 
 	 * @param array $file
+	 * 
 	 * @return array The unmodified file
 	 */
 	public function remove_existing_attachment( $file ) {
